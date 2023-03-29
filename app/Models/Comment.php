@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Comment extends Model
+{
+    use HasFactory;
+    protected $fillable = [
+        'user_id', 
+        'body', 
+        'parent', 
+        'parent_id', 
+        'approved', 
+        'commentable_id', 
+        'commentable_type'
+    ];
+
+    public function commentable()
+    {
+        return $this->morphTo();
+    }
+
+    function users()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany('App\Models\Comment', 'parent_id', 'id');
+    }
+}
